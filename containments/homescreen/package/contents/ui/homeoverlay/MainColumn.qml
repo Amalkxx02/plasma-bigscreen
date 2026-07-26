@@ -30,7 +30,7 @@ ColumnLayout {
         if (tasksButton.visible) {
             tasksButton.forceActiveFocus();
         } else {
-            searchButton.forceActiveFocus();
+            homeButton.forceActiveFocus();
         }
     }
 
@@ -126,7 +126,7 @@ ColumnLayout {
                 Layout.fillWidth: true
 
                 KeyNavigation.up: actionsRow
-                KeyNavigation.down: searchButton
+                KeyNavigation.down: tasksButton.downItem
 
                 text: i18n("Home")
                 icon.name: "go-home-symbolic"
@@ -135,27 +135,27 @@ ColumnLayout {
                 }
             }
 
-            Bigscreen.ButtonDelegate {
-                id: searchButton
-                Layout.fillWidth: true
+            // Bigscreen.ButtonDelegate {
+            //     id: searchButton
+            //     Layout.fillWidth: true
 
-                KeyNavigation.down: tasksButton.downItem
+            //     KeyNavigation.down: tasksButton.downItem
 
-                text: i18n("Search")
-                icon.name: "system-search-symbolic"
-                onClicked: {
-                    root.searchRequested();
-                }
-            }
+            //     text: i18n("Search")
+            //     icon.name: "system-search-symbolic"
+            //     onClicked: {
+            //         root.searchRequested();
+            //     }
+            // }
 
             Bigscreen.ButtonDelegate {
                 id: tasksButton
                 Layout.fillWidth: true
 
                 property Item downItem: visible ? tasksButton : controllerButton.downItem
-                property Item upItem: visible ? tasksButton : searchButton
+                property Item upItem: visible ? tasksButton : homeButton
                 KeyNavigation.down: controllerButton.downItem
-                KeyNavigation.up: searchButton
+                KeyNavigation.up: homeButton
 
                 visible: showTasksButton
                 text: i18nc("@action:button Opens an overview of all currently running apps", "Tasks")
