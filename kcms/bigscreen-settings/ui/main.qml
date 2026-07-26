@@ -3,7 +3,6 @@
     SPDX-FileCopyrightText: 2025 Devin Lin <devin@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
-
 */
 
 import QtQuick
@@ -30,7 +29,7 @@ Bigscreen.ScrollablePage {
 
     onActiveFocusChanged: {
         if (activeFocus) {
-            coloredTileDelegate.forceActiveFocus();
+            pmInhibitionDelegate.forceActiveFocus();
         }
     }
 
@@ -40,79 +39,11 @@ Bigscreen.ScrollablePage {
         spacing: 0
 
         QQC2.Label {
-            text: i18n("Homescreen Appearance")
+            text: i18n("Power & Time")
             font.pixelSize: Bigscreen.Units.headingFontPixelSize
 
             Layout.topMargin: Kirigami.Units.gridUnit
             Layout.bottomMargin: Kirigami.Units.gridUnit
-        }
-
-        Bigscreen.SwitchDelegate {
-            id: coloredTileDelegate
-            Layout.bottomMargin: Kirigami.Units.smallSpacing
-
-            raisedBackground: true
-            checked: kcm.useColoredTiles() ? 1 : 0
-            text: i18n("Colored tiles")
-            description: i18n("Tile backgrounds will be colored based on the app's icon")
-
-            KeyNavigation.down: wallpaperBlurDelegate
-
-            onCheckedChanged: kcm.setUseColoredTiles(checked);
-        }
-
-        Bigscreen.SwitchDelegate {
-            id: wallpaperBlurDelegate
-            Layout.bottomMargin: Kirigami.Units.smallSpacing
-
-            raisedBackground: true
-            checked: kcm.useWallpaperBlur() ? 1 : 0
-            text: i18n("Wallpaper blur")
-            description: i18n("Apply a blur effect to the wallpaper on the homescreen")
-
-            KeyNavigation.down: colorSchemeButton
-
-            onCheckedChanged: kcm.setUseWallpaperBlur(checked);
-        }
-
-        Bigscreen.ButtonDelegate {
-            id: colorSchemeButton
-            raisedBackground: true
-
-            KeyNavigation.down: windowDecorationsDelegate
-
-            text: i18n("Color scheme")
-            description: i18n("Set the system colors")
-
-            onClicked: colorSchemeSidebar.open();
-        }
-
-        QQC2.Label {
-            text: i18n("System")
-            font.pixelSize: Bigscreen.Units.headingFontPixelSize
-
-            Layout.topMargin: Kirigami.Units.gridUnit
-            Layout.bottomMargin: Kirigami.Units.gridUnit
-        }
-
-        Bigscreen.SwitchDelegate {
-            id: windowDecorationsDelegate
-            KeyNavigation.down: navigationSoundDelegate
-
-            text: i18n("Window decorations")
-            description: i18n("Have a window frame (minimize, maximize, close), for apps that request it")
-            checked: BigscreenShell.Settings.windowDecorationsEnabled ? true : false
-            onCheckedChanged: BigscreenShell.Settings.windowDecorationsEnabled = checked
-        }
-
-        Bigscreen.SwitchDelegate {
-            id: navigationSoundDelegate
-            KeyNavigation.down: pmInhibitionDelegate
-
-            text: i18n("Navigation sounds")
-            description: i18n("Play a sound when the selected item changes in system apps")
-            checked: BigscreenShell.Settings.navigationSoundEnabled ? true : false
-            onCheckedChanged: BigscreenShell.Settings.navigationSoundEnabled = checked
         }
 
         Bigscreen.SwitchDelegate {
@@ -160,6 +91,7 @@ Bigscreen.ScrollablePage {
                 shortcutsPicker.getActionPath = getActionPath;
                 shortcutsPicker.setActionPath = setActionPath;
                 shortcutsPicker.resetActionPath = resetActionPath;
+                shortcutsPicker.openerDelegate = homeOverlayShortcut;
                 shortcutsPicker.open();
             }
         }
@@ -180,6 +112,7 @@ Bigscreen.ScrollablePage {
                 shortcutsPicker.getActionPath = getActionPath;
                 shortcutsPicker.setActionPath = setActionPath;
                 shortcutsPicker.resetActionPath = resetActionPath;
+                shortcutsPicker.openerDelegate = homescreenShortcutDelegate;
                 shortcutsPicker.open();
             }
         }
@@ -200,6 +133,7 @@ Bigscreen.ScrollablePage {
                 shortcutsPicker.getActionPath = getActionPath;
                 shortcutsPicker.setActionPath = setActionPath;
                 shortcutsPicker.resetActionPath = resetActionPath;
+                shortcutsPicker.openerDelegate = settingsShortcutDelegate;
                 shortcutsPicker.open();
             }
         }
@@ -219,23 +153,26 @@ Bigscreen.ScrollablePage {
                 shortcutsPicker.getActionPath = getActionPath;
                 shortcutsPicker.setActionPath = setActionPath;
                 shortcutsPicker.resetActionPath = resetActionPath;
+                shortcutsPicker.openerDelegate = tasksShortcutDelegate;
                 shortcutsPicker.open();
             }
         }
 
         ShortcutsPickerSidebar {
             id: shortcutsPicker
-            onClosed: settingsShortcutDelegate.forceActiveFocus()
+            property Item openerDelegate: null
+            onClosed: {
+                if (openerDelegate) {
+                    openerDelegate.forceActiveFocus();
+                } else {
+                    homeOverlayShortcut.forceActiveFocus();
+                }
+            }
         }
 
         DeviceTimeSettingsSidebar {
             id: deviceTimeSettings
             onClosed: timeDateDelegate.forceActiveFocus()
-        }
-
-        ColorSchemeSidebar {
-            id: colorSchemeSidebar
-            onClosed: colorSchemeButton.forceActiveFocus()
         }
     }
 }
