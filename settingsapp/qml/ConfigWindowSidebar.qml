@@ -25,8 +25,8 @@ Rectangle {
 
     readonly property real horizontalMargin: Kirigami.Units.gridUnit + Kirigami.Units.largeSpacing
 
-    // Translucent background
-    color: Qt.rgba(Kirigami.Theme.backgroundColor.r, Kirigami.Theme.backgroundColor.g, Kirigami.Theme.backgroundColor.b, 0.8)
+    // Non Translucent background
+    color: Qt.rgba(Kirigami.Theme.backgroundColor.r, Kirigami.Theme.backgroundColor.g, Kirigami.Theme.backgroundColor.b, 1)
 
     width: Math.max(Kirigami.Units.gridUnit * 20, parent.width * 0.20)
     height: parent.height
@@ -79,7 +79,6 @@ Rectangle {
                 if (currentItem) {
                     currentItem.forceActiveFocus();
                 }
-
                 Bigscreen.NavigationSoundEffects.playMovingSound();
             }
 
