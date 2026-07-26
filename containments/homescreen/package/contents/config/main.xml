@@ -26,5 +26,14 @@
     <entry name="showGames" type="Bool">
         <default>true</default>
     </entry>
+    <entry name="darkenTiles" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="heroBackground" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="darkenHeroImage" type="Bool">
+        <default>true</default>
+    </entry>
 </group>
 </kcfg>
