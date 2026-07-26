@@ -13,6 +13,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.kquickcontrolsaddons
 import org.kde.kirigami as Kirigami
 import org.kde.bigscreen as Bigscreen
+import org.kde.private.biglauncher
 
 import "launcher"
 
@@ -25,6 +26,10 @@ FocusScope {
     readonly property real leftMargin: Kirigami.Units.gridUnit * 4
     readonly property real rightMargin: leftMargin
 
+    function configureWallpaper() {
+        Plasmoid.internalAction("configure").trigger();
+    }
+
     transform: Scale {
         origin.x: root.width / 2;
         origin.y: root.height / 2;
@@ -32,52 +37,80 @@ FocusScope {
         yScale: root.zoomScale
     }
 
-    states: [
-        State {
-            name: "focused"
-            when: root.StackLayout.isCurrentItem && root.Window.activeFocusItem !== null
+    Component.onCompleted: {
+        Bigscreen.NavigationSoundEffects.inConsoleScreen = true;
+        Bigscreen.NavigationSoundEffects.playAmbientSound();
+        
+        // console.log("darkenHeroImage config:", plasmoid.configuration.darkenHeroImage);
+    }
 
-            PropertyChanges {
-                target: root
-                opacity: 1
-                zoomScale: 1
-            }
-            // StateChangeScript {
-            //     script: Qt.callLater(function() {
-            //         if (launcher) {
-            //             launcher.forceActiveFocus();
-            //         }
-            //     })
-            // }
-        },
-        State {
-            name: "unfocused"
-            when: !root.StackLayout.isCurrentItem || root.Window.activeFocusItem === null
-            PropertyChanges {
-                target: root
-                opacity: 0
-                zoomScale: 1.1
-            }
-            StateChangeScript {
-                // HACK: Kill xwaylandvideobridge if running - it interferes with bigscreen's focus
-                script: Plasmoid.executeCommand("pkill -f xwaylandvideobridge")
-            }
-        }
-    ]
+    Connections {
+        target: BigLauncherDbusAdapterInterface
 
-    transitions: [
-        Transition {
-            to: "focused"
-            ParallelAnimation {
-                OpacityAnimator { duration: Kirigami.Units.shortDuration }
-                NumberAnimation { target: root; property: 'zoomScale'; duration: Kirigami.Units.longDuration; easing.type: Easing.OutExpo }
-            }
+        function onActivateWallpaperSelectorRequested() {
+            root.configureWallpaper();
         }
-    ]
+
+        function onUseDarkenTilesChanged(darkenTiles) {
+            Plasmoid.configuration.darkenTiles = darkenTiles;
+        }
+
+        function onUseHeroBackgroundChanged(heroBackground) {
+            Plasmoid.configuration.heroBackground = heroBackground;
+        }
+
+        function onUseDarkenHeroImageChanged(darkenHeroImage) {
+            Plasmoid.configuration.darkenHeroImage = darkenHeroImage;
+        }
+    }
+    // states: [
+    //     State {
+    //         name: "focused"
+    //         when: root.visible && root.Window.activeFocusItem !== null
+
+    //         PropertyChanges {
+    //             target: root
+    //             opacity: 1
+    //             zoomScale: 1
+    //         }
+    //         // StateChangeScript {
+    //         //     script: Qt.callLater(function() {
+    //         //         if (launcher) {
+    //         //             launcher.forceActiveFocus();
+    //         //         }
+    //         //     })
+    //         // }
+    //     },
+    //     State {
+    //         name: "unfocused"
+    //         when: !root.StackLayout.isCurrentItem || root.Window.activeFocusItem === null
+    //         PropertyChanges {
+    //             target: root
+    //             opacity: 0
+    //             zoomScale: 1.1
+    //         }
+    //         StateChangeScript {
+    //             // HACK: Kill xwaylandvideobridge if running - it interferes with bigscreen's focus
+    //             script: Plasmoid.executeCommand("pkill -f xwaylandvideobridge")
+    //         }
+    //     }
+    // ]
+
+    // transitions: [
+    //     Transition {
+    //         to: "focused"
+    //         ParallelAnimation {
+    //             OpacityAnimator { duration: Kirigami.Units.shortDuration }
+    //             NumberAnimation { target: root; property: 'zoomScale'; duration: Kirigami.Units.longDuration; easing.type: Easing.OutExpo }
+    //         }
+    //     }
+    // ]
 
     StartupFeedbackWindow {
         id: feedbackWindow
     }
+
+    
 
     // Games grid
     LauncherMenu {
@@ -98,13 +131,15 @@ FocusScope {
     Rectangle {
         anchors.fill: parent
         color: Qt.rgba(0, 0, 0, 0.6) 
+        visible: plasmoid.configuration.darkenHeroImage
         z: -1 
     }
-    
+
     Item {
         id: heroWallpaperContainer
         z: -2
         anchors.fill: parent
+        visible: plasmoid.configuration.heroBackground
 
         property string currentHero: launcher.activeHeroPath
 

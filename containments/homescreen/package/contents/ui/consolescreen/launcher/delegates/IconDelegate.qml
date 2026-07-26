@@ -80,7 +80,7 @@ Bigscreen.AbstractDelegate {
     Rectangle {
             id: focusHintBar
             anchors.fill:parent
-            
+            visible:plasmoid.configuration.darkenTiles
             color:Qt.rgba(0, 0, 0, 0.7)
             // Fade in only when focused by the remote
 

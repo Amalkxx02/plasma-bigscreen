@@ -19,7 +19,7 @@ Item {
         QQC2.Label {
             Layout.fillWidth: true
             text: root.modelData?.name ?? i18n("Select a Game")
-            font.pixelSize: Kirigami.Theme.defaultFont.pixelSize * 3 
+            font.pixelSize: Kirigami.Theme.defaultFont.pixelSize * 4 
             font.weight: Font.Bold
             color: "white"
             elide: Text.ElideRight
@@ -39,12 +39,13 @@ Item {
             QQC2.Label {
                 text: i18n("Platform:")
                 opacity: 0.6
+                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.weight: Font.DemiBold
             }
             QQC2.Label {
                 text: root.modelData?.source ?? i18n("System")
                 font.weight: Font.Bold
-                // Add a trailing margin to separate this pair from the next key
+                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 Layout.rightMargin: Kirigami.Units.gridUnit * 1.5 
             }
 
@@ -52,6 +53,7 @@ Item {
             QQC2.Label {
                 text: i18n("Playtime:")
                 opacity: 0.6
+                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.weight: Font.DemiBold
             }
             QQC2.Label {
@@ -60,6 +62,7 @@ Item {
                     if (!played || played <= 0) return i18n("Never played");
                     return i18n("%1 hrs", Math.round(played / 60));
                 }
+                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.weight: Font.Bold
                 Layout.rightMargin: Kirigami.Units.gridUnit * 1.5
             }
@@ -68,10 +71,12 @@ Item {
             QQC2.Label {
                 text: i18n("Last Played:")
                 opacity: 0.6
+                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.weight: Font.DemiBold
             }
             QQC2.Label {
                 text: root.modelData?.last_played ?? i18n("Never")
+                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.weight: Font.Bold
             }
         }

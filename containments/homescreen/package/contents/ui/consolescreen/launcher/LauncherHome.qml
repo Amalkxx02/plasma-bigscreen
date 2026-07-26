@@ -36,12 +36,22 @@ FocusScope {
     ColumnLayout {
         id: launcherHomeColumn
         anchors.fill:parent
-        anchors.bottomMargin: Kirigami.Units.largeSpacing * 4
+        anchors.bottomMargin: Kirigami.Units.largeSpacing * 8
         spacing: Kirigami.Units.largeSpacing * 4
 
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
+        }
+
+        GamePanel {
+            Layout.fillWidth: true
+            Layout.fillHeight: false
+
+            Layout.preferredHeight: implicitHeight
+            Layout.minimumHeight: implicitHeight
+
+            modelData: gamesView.currentItem ? gamesView.currentItem.gameData : null
         }
 
         GameDelegateListView {
@@ -64,14 +74,6 @@ FocusScope {
             navigationDown: null
         }
 
-        GamePanel {
-            Layout.fillWidth: true
-            Layout.fillHeight: false
-
-            Layout.preferredHeight: implicitHeight
-            Layout.minimumHeight: implicitHeight
-
-            modelData: gamesView.currentItem ? gamesView.currentItem.gameData : null
-        }
+        
     }
 }
