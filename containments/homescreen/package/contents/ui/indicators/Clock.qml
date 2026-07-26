@@ -108,7 +108,6 @@ Item {
             id: rowTimeLabel
             color: "white"
             renderType: Text.NativeRendering
-            font.weight: Font.ExtraBold
             font.pointSize: 24
 
             text: root.timeString
