@@ -20,6 +20,7 @@ BigscreenShellSettings::BigscreenShellSettings(QObject *parent)
         if (group.name() == GENERAL_CONFIG_GROUP) {
             Q_EMIT pmInhibitionEnabledChanged();
             Q_EMIT navigationSoundEnabledChanged();
+            Q_EMIT ambientSoundEnabledChanged();
             Q_EMIT windowDecorationsEnabledChanged();
         }
     });
@@ -48,6 +49,19 @@ void BigscreenShellSettings::setNavigationSoundEnabled(bool navigationSoundEnabl
 {
     auto group = KConfigGroup{m_config, GENERAL_CONFIG_GROUP};
     group.writeEntry("navigationSoundEnabled", navigationSoundEnabled, KConfigGroup::Notify);
+    m_config->sync();
+}
+
+bool BigscreenShellSettings::ambientSoundEnabled() const
+{
+    auto group = KConfigGroup{m_config, GENERAL_CONFIG_GROUP};
+    return group.readEntry("ambientSoundEnabled", false);
+}
+
+void BigscreenShellSettings::setAmbientSoundEnabled(bool ambientSoundEnabled)
+{
+    auto group = KConfigGroup{m_config, GENERAL_CONFIG_GROUP};
+    group.writeEntry("ambientSoundEnabled", ambientSoundEnabled, KConfigGroup::Notify);
     m_config->sync();
 }
 

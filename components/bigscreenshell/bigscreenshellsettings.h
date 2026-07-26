@@ -19,6 +19,7 @@ class BigscreenShellSettings : public QObject
     // general
     Q_PROPERTY(bool pmInhibitionEnabled READ pmInhibitionEnabled WRITE setPmInhibitionEnabled NOTIFY pmInhibitionEnabledChanged)
     Q_PROPERTY(bool navigationSoundEnabled READ navigationSoundEnabled WRITE setNavigationSoundEnabled NOTIFY navigationSoundEnabledChanged)
+    Q_PROPERTY(bool ambientSoundEnabled READ ambientSoundEnabled WRITE setAmbientSoundEnabled NOTIFY ambientSoundEnabledChanged)
     Q_PROPERTY(bool windowDecorationsEnabled READ windowDecorationsEnabled WRITE setWindowDecorationsEnabled NOTIFY windowDecorationsEnabledChanged)
 
 public:
@@ -30,12 +31,16 @@ public:
     bool navigationSoundEnabled() const;
     void setNavigationSoundEnabled(bool navigationSoundEnabled);
 
+    bool ambientSoundEnabled() const;
+    void setAmbientSoundEnabled(bool ambientSoundEnabled);
+
     bool windowDecorationsEnabled() const;
     void setWindowDecorationsEnabled(bool windowDecorationsEnabled);
 
 Q_SIGNALS:
     void pmInhibitionEnabledChanged();
     void navigationSoundEnabledChanged();
+    void ambientSoundEnabledChanged();
     void windowDecorationsEnabledChanged();
 
 private:
