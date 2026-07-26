@@ -7,7 +7,6 @@
  ***************************************************************************/
 
 #include "bigscreensettings.h"
-#include "colorschemelistmodel.h"
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -23,13 +22,8 @@
 BigscreenSettings::BigscreenSettings(QObject *parent, const KPluginMetaData &data)
     : KQuickConfigModule(parent, data)
     , m_config(KSharedConfig::openConfig(QStringLiteral("kdeglobals")))
-    , m_colorSchemeListModel(new ColorSchemeListModel(this))
 {
     setButtons(Apply);
-
-    qmlRegisterAnonymousType<ColorSchemeListModel>("ColorSchemeListModel", 1);
-    loadColorSchemeName();
-    connect(m_colorSchemeListModel, &ColorSchemeListModel::colorSchemeChanged, this, &BigscreenSettings::loadColorSchemeName);
 
     OrgFreedesktopTimedate1Interface timedateIface(QStringLiteral("org.freedesktop.timedate1"),
                                                    QStringLiteral("/org/freedesktop/timedate1"),
@@ -37,59 +31,7 @@ BigscreenSettings::BigscreenSettings(QObject *parent, const KPluginMetaData &dat
     m_useNtp = timedateIface.nTP();
 }
 
-void BigscreenSettings::load()
-{
-    loadColorSchemeName();
-}
-
 BigscreenSettings::~BigscreenSettings() = default;
-
-void BigscreenSettings::loadColorSchemeName()
-{
-    m_config->reparseConfiguration();
-    KConfigGroup generalGroup(m_config, QStringLiteral("General"));
-    const QString colorSchemeName = generalGroup.readEntry("ColorScheme", QStringLiteral("BreezeLight"));
-
-    if (colorSchemeName != m_colorSchemeName) {
-        m_colorSchemeName = colorSchemeName;
-        Q_EMIT colorSchemeNameChanged();
-    }
-}
-
-QString BigscreenSettings::colorSchemeName() const
-{
-    return m_colorSchemeName;
-}
-
-bool BigscreenSettings::useColoredTiles()
-{
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.kde.biglauncher", "/BigLauncher", "", "coloredTilesActive");
-    QDBusMessage response = QDBusConnection::sessionBus().call(msg);
-    QList<QVariant> responseArg = response.arguments();
-    return responseArg.at(0).toBool();
-}
-
-void BigscreenSettings::setUseColoredTiles(bool useColoredTiles)
-{
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.kde.biglauncher", "/BigLauncher", "", "useColoredTiles");
-    msg << useColoredTiles;
-    QDBusConnection::sessionBus().send(msg);
-}
-
-bool BigscreenSettings::useWallpaperBlur()
-{
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.kde.biglauncher", "/BigLauncher", "", "wallpaperBlurActive");
-    QDBusMessage response = QDBusConnection::sessionBus().call(msg);
-    QList<QVariant> responseArg = response.arguments();
-    return responseArg.at(0).toBool();
-}
-
-void BigscreenSettings::setUseWallpaperBlur(bool useWallpaperBlur)
-{
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.kde.biglauncher", "/BigLauncher", "", "useWallpaperBlur");
-    msg << useWallpaperBlur;
-    QDBusConnection::sessionBus().send(msg);
-}
 
 void BigscreenSettings::saveTimeZone(const QString &newtimezone)
 {
@@ -211,12 +153,6 @@ void BigscreenSettings::resetShortcut(const QString &action)
     QDBusConnection::sessionBus().send(msg);
 }
 
-ColorSchemeListModel *BigscreenSettings::colorSchemeListModel()
-{
-    return m_colorSchemeListModel;
-}
-
 K_PLUGIN_CLASS_WITH_JSON(BigscreenSettings, "kcm_mediacenter_bigscreen_settings.json")
 
 #include "bigscreensettings.moc"
-#include "moc_bigscreensettings.cpp"
