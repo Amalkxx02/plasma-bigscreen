@@ -98,7 +98,7 @@ QVariantList GameManager::getGames()
 {
     QVariantList gameList;
     QSqlQuery query(m_db);
-    qWarning() << "DB Call Happening";
+    // qWarning() << "DB Call Happening";
     if (!query.exec("SELECT * FROM games")) {
         qWarning() << "Failed to fetch game from database!" << query.lastError().text();
         return gameList;
@@ -116,7 +116,7 @@ QVariantList GameManager::getGames()
         game["last_played"] = query.value("last_played").toLongLong();
         game["source"] = query.value("source").toString();
         game["command"] = query.value("command").toString();
-        qWarning() << "Game from DB : " << game;
+        // qWarning() << "Game from DB : " << game;
         gameList.append(game);
     }
     return gameList;
