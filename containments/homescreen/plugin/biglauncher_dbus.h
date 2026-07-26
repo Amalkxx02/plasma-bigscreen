@@ -37,6 +37,15 @@ public Q_SLOTS: // METHODS
     Q_SCRIPTABLE void useWallpaperBlur(const bool &wallpaperBlur);
     Q_SCRIPTABLE bool wallpaperBlurActive();
 
+    Q_SCRIPTABLE void useDarkenTiles(const bool &darkenTiles);
+    Q_SCRIPTABLE bool darkenTilesActive();
+
+    Q_SCRIPTABLE void useHeroBackground(const bool &heroBackground);
+    Q_SCRIPTABLE bool heroBackgroundActive();
+
+    Q_SCRIPTABLE void useDarkenHeroImage(const bool &darkenHeroImage);
+    Q_SCRIPTABLE bool darkenHeroImageActive();
+
     Q_SCRIPTABLE void setShowRecent(const bool &showRecent);
     Q_SCRIPTABLE bool showRecentActive();
 
@@ -65,6 +74,9 @@ public Q_SLOTS: // METHODS
 Q_SIGNALS: // SIGNALS
     Q_SCRIPTABLE void useColoredTilesChanged(const bool &msgUseColoredTiles);
     Q_SCRIPTABLE void useWallpaperBlurChanged(const bool &msgUseWallpaperBlur);
+    Q_SCRIPTABLE void useDarkenTilesChanged(const bool &msgUseDarkenTiles);
+    Q_SCRIPTABLE void useHeroBackgroundChanged(const bool &msgUseHeroBackground);
+    Q_SCRIPTABLE void useDarkenHeroImageChanged(const bool &msgUseDarkenHeroImage);
     Q_SCRIPTABLE void showRecentChanged(const bool &msgShowRecent);
     Q_SCRIPTABLE void showApplicationsChanged(const bool &msgShowApplications);
     Q_SCRIPTABLE void showGamesChanged(const bool &msgShowGames);

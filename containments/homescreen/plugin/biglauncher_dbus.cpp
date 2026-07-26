@@ -75,6 +75,42 @@ bool BigLauncherDbusAdapterInterface::wallpaperBlurActive()
     return m_config.readEntry("wallpaperBlur", false);
 }
 
+void BigLauncherDbusAdapterInterface::useDarkenTiles(const bool &darkenTiles)
+{
+    m_config.writeEntry("darkenTiles", darkenTiles);
+    m_config.sync();
+    Q_EMIT useDarkenTilesChanged(darkenTiles);
+}
+
+bool BigLauncherDbusAdapterInterface::darkenTilesActive()
+{
+    return m_config.readEntry("darkenTiles", true);
+}
+
+void BigLauncherDbusAdapterInterface::useHeroBackground(const bool &heroBackground)
+{
+    m_config.writeEntry("heroBackground", heroBackground);
+    m_config.sync();
+    Q_EMIT useHeroBackgroundChanged(heroBackground);
+}
+
+bool BigLauncherDbusAdapterInterface::heroBackgroundActive()
+{
+    return m_config.readEntry("heroBackground", true);
+}
+
+void BigLauncherDbusAdapterInterface::useDarkenHeroImage(const bool &darkenHeroImage)
+{
+    m_config.writeEntry("darkenHeroImage", darkenHeroImage);
+    m_config.sync();
+    Q_EMIT useDarkenHeroImageChanged(darkenHeroImage);
+}
+
+bool BigLauncherDbusAdapterInterface::darkenHeroImageActive()
+{
+    return m_config.readEntry("darkenHeroImage", true);
+}
+
 void BigLauncherDbusAdapterInterface::setShowRecent(const bool &showRecent)
 {
     m_config.writeEntry("showRecent", showRecent);
