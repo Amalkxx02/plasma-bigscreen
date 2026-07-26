@@ -18,9 +18,7 @@ import org.kde.plasma.plasmoid
 import org.kde.private.biglauncher
 import org.kde.taskmanager as TaskManager
 
-import "consolescreen"
 import "homeoverlay"
-import "homescreen"
 import "navbar" as Navbar
 import "search" as Search
 
@@ -184,12 +182,12 @@ ContainmentItem {
     //     z: 99999
     // }
 
-
+    
     // Shared Top Navigation Bar
     Navbar.Navbar {
         id: mainNavbar
-        downFocusItem: screenStack.children[screenStack.currentIndex]
-        state: (root.activeTabIndex === 0 && !homeScreen.scrolledDown) ? "large" : "shrunk"
+        downFocusItem: screenLoader.item
+        state: (root.activeTabIndex === 0 && !screenLoader.item?.scrolledDown) ? "large":"shrunk" 
         z: 99
         anchors {
             top: parent.top
@@ -200,39 +198,17 @@ ContainmentItem {
         }
     }
 
-    //TODO need to find a way to add loader for memory efficient
-    // The Screen Switcher
-    StackLayout {
-        id: screenStack
+    Loader {
+        id:screenLoader
+        anchors.fill:parent
+        source: root.activeTabIndex === 0 ? "homescreen/HomeScreen.qml" : "consolescreen/ConsoleScreen.qml"
 
-        anchors.fill: parent
-        currentIndex:  root.activeTabIndex  
-
-        onCurrentIndexChanged: {
-            var currentScreen = children[currentIndex];
-            if (currentScreen) {
-                currentScreen.forceActiveFocus();
-            }
+        onLoaded: {
+            item.header = mainNavbar
+            item.KeyNavigation.up = mainNavbar.focusTarget
+            item.forceActiveFocus()
         }
-
-        // INDEX 0: HOME SCREEN
-        HomeScreen {
-            id: homeScreen
-
-            header: mainNavbar
-            KeyNavigation.up: mainNavbar.focusTarget
-            focus: true
-        }
-
-        // INDEX 1: GAMES SCREEN
-        ConsoleScreen {
-            id: consoleScreen
-
-            header: mainNavbar
-            KeyNavigation.up: mainNavbar.focusTarget
-            focus: true
-        }
-
+        
     }
 
 }
